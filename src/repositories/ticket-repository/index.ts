@@ -37,11 +37,42 @@ async function getEnrollmentByID(id: number) {
   });
 }
 
+async function getTicketById(id: number) {
+  return prisma.ticket.findFirst({
+    where: { id },
+  });
+}
+
+async function getTicketValue(ticketId: number) {
+  return prisma.ticket.findUnique({
+    where: { id: ticketId },
+    select: {
+      TicketType: {
+        select: {
+          price: true,
+        },
+      },
+    },
+  });
+}
+
+async function updateTicketStatus(ticketId: number) {
+  return prisma.ticket.update({
+    where: { id: ticketId },
+    data: {
+      status: "PAID",
+    },
+  })
+}
+
 const ticketRepository = {
   getTicketByUserID,
   getTicketTypes,
   createTicket,
   getEnrollmentByID,
+  getTicketById,
+  getTicketValue,
+  updateTicketStatus,
 };
 
 export default ticketRepository;
